@@ -19,6 +19,8 @@
 #include <X11/extensions/shape.h>
 #include <QX11Info>
 
+#include <gdk/gdk.h>
+
 #define _NET_WM_MOVERESIZE_SIZE_TOPLEFT      0
 #define _NET_WM_MOVERESIZE_SIZE_TOP          1
 #define _NET_WM_MOVERESIZE_SIZE_TOPRIGHT     2
@@ -310,6 +312,8 @@ void StupidWindow::startMoving() {
     xev.xclient.display = display;
     xev.xclient.window = winId;
     xev.xclient.format = 32;
+
+    gdk_pointer_ungrab(0);
 
     const auto globalPos = QCursor::pos();
     xev.xclient.data.l[0] = globalPos.x();

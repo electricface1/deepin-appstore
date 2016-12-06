@@ -3,7 +3,8 @@ project(Shell)
 set(SHELL_VERSION 4.0.8)
 #set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra -Werror -Wno-unused-variable -Wfatal-errors")
 
 #add_definitions(-D DEBUG_LASTORE=1)
 #add_definitions(-D DEBUG_LOCAL_REQUEST=1)
@@ -23,8 +24,23 @@ find_package(Qt5Gui REQUIRED)
 find_package(Qt5DBus REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(Qt5Network REQUIRED)
+find_package(Qt5WebChannel REQUIRED)
+
+set(CEF_ROOT "/usr/lib/cef-1650")
+set(CEF_INCLUDE_DIRS "${CEF_ROOT}")
+set(CEF_LIBRARIES "-L${CEF_ROOT}")
+
+set(CMAKE_INSTALL_RPATH "${CEF_ROOT}")
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+
+add_definitions(-DCEF_ROOT="${CEF_ROOT}")
+
+include_directories(AFTER ${CEF_INCLUDE_DIRS})
+include_directories(AFTER "CEFView")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_KEYWORDS")
 
 pkg_search_module(GLIB REQUIRED glib-2.0)
+pkg_search_module(GTK REQUIRED gtk+-2.0)
 pkg_search_module(X11 REQUIRED x11)
 pkg_search_module(X11Ext REQUIRED xext)
 pkg_search_module(GIO REQUIRED gio-unix-2.0)
@@ -33,6 +49,8 @@ include_directories(AFTER ${GLIB_INCLUDE_DIRS})
 include_directories(AFTER ${X11_INCLUDE_DIRS})
 include_directories(AFTER ${X11Ext_INCLUDE_DIRS})
 include_directories(AFTER ${GIO_INCLUDE_DIRS})
+include_directories(AFTER ${GTK_INCLUDE_DIRS})
+
 
 set(SOURCE_FILES main.cpp
                  StupidWindow.cpp StupidWindow.h
@@ -40,6 +58,7 @@ set(SOURCE_FILES main.cpp
                  Shell.cpp Shell.h
                  Bridge.cpp Bridge.h
                  FilterMouseMove.cpp FilterMouseMove.h
+                 TextBrowser.cpp TextBrowser.h
                  AboutWindow.cpp AboutWindow.h
                  DBusInterface.cpp DBusInterface.h)
 
@@ -53,41 +72,42 @@ set(LINK_LIBS
         Qt5::DBus
         Qt5::Gui
         Qt5::Network
+        Qt5::WebChannel
         ${GLIB_LIBRARIES}
         ${X11_LIBRARIES}
         ${X11Ext_LIBRARIES}
         ${GIO_LIBRARIES}
+        ${CEF_LIBRARIES}
+        ${GTK_LIBRARIES}
+        "${CEF_LIBRARIES}/obj.target"
 )
 
 add_definitions(-DSHELL_VERSION="${SHELL_VERSION}")
 
-# Link against either QtWebKit or QtWebEngine
-#find_package(Qt5WebEngineWidgets)
-# track qt web engine missing features: https://trello.com/b/5G9c1rkb/qtwebengine
-if(Qt5WebEngineWidgets_FOUND)
-    find_package(Qt5WebChannel REQUIRED)
-    set(WEB_WIDGET_FILES WebEngine/WebView.cpp WebEngine/WebView.h WebEngine/WebPage.cpp WebEngine/WebPage.h)
-    add_definitions(-D BUILD_WITH_WEBENGINE=1)
-    add_executable(deepin-appstore ${SOURCE_FILES} ${TOOLTIP_FILES} ${DBUSMENU_FILES} ${DBUS_BACKEND_FILES} ${WEB_WIDGET_FILES}
-                   res.qrc
-                   "/usr/include/lastore-daemon.h")
-    target_link_libraries(deepin-appstore ${LINK_LIBS} Qt5::WebEngineWidgets Qt5::WebChannel)
-else()
-    set(WEB_WIDGET_FILES WebKit/WebView.cpp WebKit/WebView.h
-                         WebKit/WebPage.cpp WebKit/WebPage.h
-                         WebKit/NetworkAccessManager.cpp WebKit/NetworkAccessManager.h
-                         WebKit/CookieJar.cpp WebKit/CookieJar.h
-                         WebKit/LocalFileSystemReply.cpp WebKit/LocalFileSystemReply.h)
+set(WEB_WIDGET_FILES
+  CEFView/cef_init.cc
+  CEFView/cef_init.h
 
-    find_package(Qt5WebKit REQUIRED)
-    find_package(Qt5WebKitWidgets REQUIRED)
-    add_definitions(-DBUILD_WITH_WEBKIT=1)
-    add_executable(deepin-appstore ${SOURCE_FILES} ${TOOLTIP_FILES} ${DBUSMENU_FILES} ${DBUS_BACKEND_FILES} ${WEB_WIDGET_FILES}
-                   res.qrc
-                   "/usr/include/lastore-daemon.h")
+  CEFView/browser_handler.cc
+  CEFView/browser_handler.h
 
-    target_link_libraries(deepin-appstore ${LINK_LIBS} Qt5::WebKitWidgets)
-endif()
+  CEFView/renderer_handler.cc
+  CEFView/renderer_handler.h
+
+  CEFView/webview.cpp
+  CEFView/webview.h
+
+  CEFView/webchannel_transport.cc
+  CEFView/webchannel_transport.h
+  )
+
+add_definitions(-DBUILD_WITH_CEF=1)
+add_executable(deepin-appstore ${SOURCE_FILES} ${TOOLTIP_FILES} ${DBUSMENU_FILES} ${DBUS_BACKEND_FILES} ${WEB_WIDGET_FILES}
+  res.qrc
+  "/usr/include/lastore-daemon.h")
+
+target_link_libraries(deepin-appstore -lcef ${LINK_LIBS} ${CEF_STANDARD_LIBS} -lcef -lcef_dll_wrapper)
+
 
 install(TARGETS deepin-appstore
         DESTINATION "/usr/bin")

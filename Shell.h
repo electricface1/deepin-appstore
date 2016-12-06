@@ -16,7 +16,6 @@ class QCommandLineParser;
 class QSettings;
 
 class DBusInterface;
-class MainWindow;
 
 class ToolTip;
 
@@ -42,8 +41,6 @@ private:
     ToolTip* tooltip = nullptr;
     DBusInterface* dbusInterface = nullptr;
     void parseOptions();
-    void startWebView();
-    MainWindow* win = nullptr;
 };
 
 

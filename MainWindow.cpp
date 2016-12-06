@@ -16,6 +16,7 @@
 #include "Shell.h"
 #include "MainWindow.h"
 #include "FilterMouseMove.h"
+#include "Bridge.h"
 
 MainWindow::MainWindow(StupidWindow *parent) : StupidWindow(parent) {
     qDebug() << "Build with" << WebWidgetName;
@@ -27,6 +28,7 @@ MainWindow::MainWindow(StupidWindow *parent) : StupidWindow(parent) {
     this->setAttribute(Qt::WA_DeleteOnClose, true);
 
     this->webView = new WebView(this);
+    this->webView->registerObject("bridge", new Bridge(this));
 
     // Leave event will cause problems with <horizontal-resizer>, eat leave events!
     const auto filter = new FilterMouseMove(this);
@@ -35,7 +37,6 @@ MainWindow::MainWindow(StupidWindow *parent) : StupidWindow(parent) {
     connect(this->webView, &WebView::titleChanged, [this](const QString& title) {
         if (!title.isEmpty()) {
             this->setWindowTitle(title);
-//            disconnect(this->webView, &WebView::titleChanged, nullptr, nullptr);
         }
     });
 
@@ -70,7 +71,7 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
 }
 
 MainWindow::~MainWindow() {
-
+    qDebug() << __FUNCTION__;
 }
 
 bool MainWindow::event(QEvent* event) {

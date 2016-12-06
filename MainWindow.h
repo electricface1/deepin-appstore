@@ -36,7 +36,7 @@ Q_SIGNALS:
 
 private:
     WebView* webView = nullptr;
-
+    void registerBridge();
 protected:
     bool event(QEvent* event) override;
     void changeEvent(QEvent* event) override;

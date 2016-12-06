@@ -84,7 +84,8 @@ Bridge::~Bridge() {
 }
 
 void Bridge::exit() {
-    qApp->exit();
+    void QuitCEFLoop();
+    QuitCEFLoop();
 }
 
 void Bridge::showMinimize() {
@@ -111,10 +112,7 @@ void Bridge::startMoving() {
 
 
 MainWindow* Bridge::getMainWindow() {
-    WebPage* webPage = static_cast<WebPage*>(this->parent());
-    WebView* webView = static_cast<WebView*>(webPage->parent());
-    MainWindow* mainWindow = static_cast<MainWindow*>(webView->window());
-    return mainWindow;
+    return static_cast<MainWindow*>(this->parent());
 }
 
 // Window Menu
@@ -167,7 +165,7 @@ void Bridge::showMenu(QVariantMap content) {
 
 void Bridge::onItemInvoked(const QString& id, bool UNUSED(checked)) {
     if (id == "exit") {
-        qApp->exit(0);
+        this->exit();
     } else if (id == "help") {
         const auto shell = static_cast<Shell*>(qApp);
         shell->openManual();

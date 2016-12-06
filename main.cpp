@@ -9,9 +9,12 @@
 #include <QDebug>
 #include <QNetworkProxyFactory>
 
+#include "MainWindow.h"
 #include "Shell.h"
+#include "cef_init.h"
 
 int main(int argc, char *argv[]) {
+    InitCEF(argc, argv);
     QNetworkProxyFactory::setUseSystemConfiguration(true);
 
     Shell::setApplicationName("DeepinStore");
@@ -21,6 +24,14 @@ int main(int argc, char *argv[]) {
     Shell::setOrganizationName("Deepin");
 
     Shell shell(argc, argv);
-    int result = shell.exec();
-    return result;
+
+    MainWindow win;
+    win.setUrl(shell.initUrl);
+    win.show();
+    win.polish();
+
+    RunCEFLoop();
+
+    ShutdownCEF();
+    return 0;
 }

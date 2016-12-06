@@ -14,10 +14,10 @@
 #include <QProcess>
 
 #include "Shell.h"
-#include "MainWindow.h"
 #include "DBusInterface.h"
 #include "ToolTip.h"
 #include "Bridge.h"
+#include "cef_init.h"
 
 
 Shell::Shell(int& argc, char** argv) : QApplication(argc, argv) {
@@ -55,11 +55,11 @@ Shell::Shell(int& argc, char** argv) : QApplication(argc, argv) {
     } else if (isProfessionalVersion()){
         this->initUrl = QUrl("http://appstore.deepin.com/");
     } else {
-	this->initUrl = QUrl("http://appstore.deepin.org/");
+        this->initUrl = QUrl("http://appstore.deepin.org/");
     }
+    this->initUrl = QUrl("http://loongson.appstore.deepin.com");
 
     this->origin = this->initUrl.scheme() + "://" + this->initUrl.host();
-    this->startWebView();
 }
 
 Shell::~Shell() {
@@ -67,10 +67,7 @@ Shell::~Shell() {
         delete this->argsParser;
         this->argsParser = nullptr;
     }
-    if (this->dbusInterface) {
-        delete this->dbusInterface;
-        this->dbusInterface = nullptr;
-    }
+    qDebug() << __FUNCTION__;
 }
 
 void Shell::showTooltip(const QString& text, const QRect& globalGeometry) {
@@ -114,13 +111,6 @@ void Shell::parseOptions() {
     });
 
     this->argsParser->process(qApp->arguments());
-}
-
-void Shell::startWebView() {
-    this->win = new MainWindow();
-    this->win->setUrl(this->initUrl);
-    this->win->show();
-    this->win->polish();
 }
 
 void Shell::openManual() {
