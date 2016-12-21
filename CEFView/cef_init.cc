@@ -49,6 +49,13 @@ CefSettings BuildCefSettings() {
     CefString(&settings.resources_dir_path) = CefString(CEF_ROOT);
     CefString(&settings.locales_dir_path) = CefString(CEF_ROOT"/locales");
 
+    auto ua = QApplication::instance()->applicationName() + "/" + QApplication::instance()->applicationVersion();
+    if (ua != "/") {
+        CefString(&settings.user_agent) = CefString(ua.toStdWString());
+    } else {
+        qWarning() << "Can't find application version information";
+    }
+
     settings.remote_debugging_port = 8088;
     return settings;
 }

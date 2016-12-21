@@ -14,7 +14,6 @@
 #include "cef_init.h"
 
 int main(int argc, char *argv[]) {
-    InitCEF(argc, argv);
     QNetworkProxyFactory::setUseSystemConfiguration(true);
 
     Shell::setApplicationName("DeepinStore");
@@ -22,6 +21,8 @@ int main(int argc, char *argv[]) {
     Shell::setApplicationVersion(SHELL_VERSION);
     Shell::setOrganizationDomain("deepin.org");
     Shell::setOrganizationName("Deepin");
+
+    InitCEF(argc, argv);
 
     Shell shell(argc, argv);
 
