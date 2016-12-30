@@ -27,7 +27,12 @@ class Bridge : public QObject {
     Q_PROPERTY(LAStoreBridge* lastore
                MEMBER lastore
                CONSTANT
-    )
+        )
+
+    Q_PROPERTY(bool supportDMan
+               MEMBER m_supportDMan
+               CONSTANT
+        )
 
 public:
     Bridge(QObject* parent = nullptr);
@@ -90,6 +95,8 @@ private:
 
     LAStoreBridge* lastore = nullptr;
     unsigned int layoutMargin();
+
+    const bool m_supportDMan;
 };
 
 

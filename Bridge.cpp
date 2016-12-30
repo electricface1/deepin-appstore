@@ -49,7 +49,7 @@ auto nameWindowState(Qt::WindowStates state) -> QString {
     }
 }
 
-Bridge::Bridge(QObject *parent) : QObject(parent) {
+Bridge::Bridge(QObject *parent) : QObject(parent), m_supportDMan(QFile("/usr/bin/dman").exists()) {
     this->lastore = new LAStoreBridge(this);
     this->menuManager = new DBusMenuManager(this);
 
