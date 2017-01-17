@@ -2,8 +2,9 @@
 #define __BROWSER_HANDLER_H__
 
 #include "include/cef_client.h"
+#include "include/cef_request_handler.h"
 
-class BrowserHandler : public CefClient, public CefContextMenuHandler {
+class BrowserHandler : public CefClient, public CefContextMenuHandler, public CefRequestHandler {
  public:
   // Provide access to the single global instance of this object.
   static BrowserHandler* GetInstance();
@@ -21,6 +22,18 @@ class BrowserHandler : public CefClient, public CefContextMenuHandler {
   }
 
   virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message );
+
+
+
+  virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
+      return this;
+  }
+
+  virtual CefRefPtr<CefResourceHandler> GetResourceHandler(
+      CefRefPtr<CefBrowser> browser,
+      CefRefPtr<CefFrame> frame,
+      CefRefPtr<CefRequest> request) OVERRIDE;
+
 
  private:
   // Include the default reference counting implementation.
