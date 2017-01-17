@@ -16,6 +16,7 @@
 
 #include "webview.h"
 #include "webchannel_transport.h"
+#include "Shell.h"
 
 BrowserHandler* BrowserHandler::GetInstance() {
     static BrowserHandler* g_instance = new BrowserHandler;
@@ -63,6 +64,16 @@ bool BrowserHandler::OnProcessMessageReceived( CefRefPtr< CefBrowser > browser, 
 
 
 bool handleRequestFromLocalData(QUrl url, QByteArray& data, QString& mime) {
+    //TODO: remove dependencies of class Shell
+    const auto shell = static_cast<Shell*>(qApp);
+    if (url.host() != shell->initUrl.host()) {
+        return false;
+    }
+
+    if (url.path() == "/") {
+        url.setPath("/index.html");
+    }
+
     QFileInfo info("/usr/share/deepin-appstore/webapp" + url.path());
     if (info.isDir() || !info.exists()) {
         return false;

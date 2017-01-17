@@ -49,6 +49,12 @@ CefSettings BuildCefSettings() {
     CefString(&settings.resources_dir_path) = CefString(CEF_ROOT);
     CefString(&settings.locales_dir_path) = CefString(CEF_ROOT"/locales");
 
+    // NOTE: I don't why the default locale value isn't according system locale that it should be by document. So we set it directly.
+    char* s = 0;
+    if ((s = getenv("LANGUAGE"))  || (s = getenv("LC_ALL")) || (s = getenv("LANG"))) {
+        CefString(&settings.locale) = CefString(s);
+    }
+
     auto ua = QApplication::instance()->applicationName() + "/" + QApplication::instance()->applicationVersion();
     if (ua != "/") {
         CefString(&settings.user_agent) = CefString(ua.toStdWString());
@@ -56,7 +62,7 @@ CefSettings BuildCefSettings() {
         qWarning() << "Can't find application version information";
     }
 
-    settings.remote_debugging_port = 8088;
+    // settings.remote_debugging_port = 8088;
     return settings;
 }
 
