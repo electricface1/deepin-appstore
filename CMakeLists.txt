@@ -26,11 +26,11 @@ find_package(PkgConfig REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5WebChannel REQUIRED)
 
-set(CEF_ROOT "/usr/lib/cef-1650")
+set(CEF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/cef-2743")
 set(CEF_INCLUDE_DIRS "${CEF_ROOT}")
-set(CEF_LIBRARIES "-L${CEF_ROOT}")
+set(CEF_LIBRARIES "-L${CEF_ROOT}/Release -L${CEF_ROOT}/libcef_dll_wrapper")
 
-set(CMAKE_INSTALL_RPATH "${CEF_ROOT}")
+set(CMAKE_INSTALL_RPATH "${CEF_ROOT}/Release")
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
 add_definitions(-DCEF_ROOT="${CEF_ROOT}")
