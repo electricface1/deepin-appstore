@@ -1,6 +1,5 @@
 #ifndef __WEBVIEW_H__
 #define __WEBVIEW_H__
-
 #include <gtk/gtk.h>
 #include <QWidget>
 #include <QUrl>
@@ -31,9 +30,7 @@ Q_SIGNALS:
     void titleChanged(const QString& title);
 
 protected:
-    virtual void showEvent(QShowEvent*);
     virtual void resizeEvent(QResizeEvent*);
-    virtual void closeEvent(QCloseEvent*);
 
 public:
     void pageCreated(const int64 id);
@@ -42,7 +39,8 @@ public:
 
 private:
     bool CreateBrowser();
-
+    Q_SLOT void initCEF();
+    void syncCEFSize(int);
     QUrl url_;
     QMutex mutex_;
 

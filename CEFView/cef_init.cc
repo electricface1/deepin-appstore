@@ -46,8 +46,8 @@ CefSettings BuildCefSettings() {
     // settings.log_severity = LOGSEVERITY_DISABLE;
     // settings.log_severity = LOGSEVERITY_VERBOSE;
 
-    CefString(&settings.resources_dir_path) = CefString(CEF_ROOT);
-    CefString(&settings.locales_dir_path) = CefString(CEF_ROOT"/locales");
+    CefString(&settings.resources_dir_path) = CefString(CEF_ROOT"/Resources");
+    CefString(&settings.locales_dir_path) = CefString(CEF_ROOT"/Resources/locales");
 
     // NOTE: I don't why the default locale value isn't according system locale that it should be by document. So we set it directly.
     char* s = 0;
@@ -87,14 +87,14 @@ int InitCEF(int argc, char* argv[]) {
     // CEF applications have multiple sub-processes (render, plugin, GPU, etc)
     // that share the same executable. This function checks the command-line and,
     // if this is a sub-process, executes the appropriate logic.
-    int exit_code = CefExecuteProcess(main_args, app.get());
+    int exit_code = CefExecuteProcess(main_args, app.get(), 0);
     if (exit_code >= 0) {
         // The sub-process has completed so return here.
         return exit_code;
     }
 
     // Initialize CEF for the browser process.
-    if (!CefInitialize(main_args, BuildCefSettings(), app.get())) {
+    if (!CefInitialize(main_args, BuildCefSettings(), app.get(), 0)) {
         printf("Init Failed\n");
         return 1;
     }
