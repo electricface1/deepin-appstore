@@ -26,11 +26,11 @@ find_package(PkgConfig REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5WebChannel REQUIRED)
 
-set(CEF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/cef-2743")
+set(CEF_ROOT "/usr/lib/cef-2743")
 set(CEF_INCLUDE_DIRS "${CEF_ROOT}")
-set(CEF_LIBRARIES "-L${CEF_ROOT}/Release -L${CEF_ROOT}/libcef_dll_wrapper")
+set(CEF_LIBRARIES "-L${CEF_ROOT}")
 
-set(CMAKE_INSTALL_RPATH "${CEF_ROOT}/Release")
+set(CMAKE_INSTALL_RPATH "${CEF_ROOT}")
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
 add_definitions(-DCEF_ROOT="${CEF_ROOT}")
@@ -110,7 +110,7 @@ target_link_libraries(deepin-appstore -lcef ${LINK_LIBS} ${CEF_STANDARD_LIBS} -l
 
 
 install(TARGETS deepin-appstore
-        DESTINATION "/usr/bin")
+        DESTINATION "/usr/lib/cef-2743")
 install(FILES support/deepin-appstore.desktop
         DESTINATION "/usr/share/applications")
 install(DIRECTORY support/icons/

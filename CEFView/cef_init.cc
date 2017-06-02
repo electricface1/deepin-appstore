@@ -46,8 +46,8 @@ CefSettings BuildCefSettings() {
     // settings.log_severity = LOGSEVERITY_DISABLE;
     // settings.log_severity = LOGSEVERITY_VERBOSE;
 
-    CefString(&settings.resources_dir_path) = CefString(CEF_ROOT"/Resources");
-    CefString(&settings.locales_dir_path) = CefString(CEF_ROOT"/Resources/locales");
+    CefString(&settings.resources_dir_path) = CefString(CEF_ROOT"/");
+    CefString(&settings.locales_dir_path) = CefString(CEF_ROOT"/locales");
 
     // NOTE: I don't why the default locale value isn't according system locale that it should be by document. So we set it directly.
     char* s = 0;
