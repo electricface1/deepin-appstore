@@ -9,4 +9,4 @@ override_dh_auto_install:
 	dh_auto_install --  
 	mkdir -p debian/tmp/usr/share/deepin-appstore/webapp
 	tar xvf webapp.tar.gz -C debian/tmp/usr/share/deepin-appstore/webapp
-	wget http://loongson.appstore.deepin.com/scripts/config.js -O debian/tmp/usr/share/deepin-appstore/webapp/scripts/config.js
+	wget http://loongson64.appstore.deepin.com/scripts/config.js -O debian/tmp/usr/share/deepin-appstore/webapp/scripts/config.js

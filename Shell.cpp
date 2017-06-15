@@ -57,7 +57,7 @@ Shell::Shell(int& argc, char** argv) : QApplication(argc, argv) {
     } else {
         this->initUrl = QUrl("http://appstore.deepin.org/");
     }
-    this->initUrl = QUrl("http://loongson.appstore.deepin.com");
+    this->initUrl = QUrl("http://loongson64.appstore.deepin.com");
 
     this->origin = this->initUrl.scheme() + "://" + this->initUrl.host();
 }
