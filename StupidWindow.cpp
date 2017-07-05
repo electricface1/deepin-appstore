@@ -300,6 +300,8 @@ void StupidWindow::updateCursor(CornerEdge ce) {
     XFlush(display);
 }
 
+#include <include/internal/cef_types_linux.h>
+
 void StupidWindow::startMoving() {
     const auto display = QX11Info::display();
     const auto winId = this->winId();
@@ -314,6 +316,8 @@ void StupidWindow::startMoving() {
     xev.xclient.format = 32;
 
     gdk_pointer_ungrab(0);
+    XUngrabPointer(cef_get_xdisplay(), 0);
+    XUngrabPointer(display, 0);
 
     const auto globalPos = QCursor::pos();
     xev.xclient.data.l[0] = globalPos.x();
