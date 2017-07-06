@@ -1,6 +1,5 @@
 #ifndef __WEBVIEW_H__
 #define __WEBVIEW_H__
-#include <gtk/gtk.h>
 #include <QWidget>
 #include <QUrl>
 #include <QMutex>
@@ -45,7 +44,7 @@ private:
     QMutex mutex_;
 
     CefRefPtr<CefBrowser> m_browser;
-    GtkWidget* m_browser_widget;
+    QWindow* m_cef_proxy;
     QWebChannel* m_channel;
     QHash<int64, CefWebChannelTransport*> m_transports;
 

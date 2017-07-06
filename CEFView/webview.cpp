@@ -14,7 +14,7 @@
 #include "webview.h"
 #include "webchannel_transport.h"
 
-
+#include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 #include <QTimer>
 const QString WebView::kUrlBlank = "about:blank";
@@ -27,7 +27,7 @@ WebView* WebView::find(int64 browser_id) {
 
 WebView::WebView(QWidget* parent)
     : QWidget(parent),
-      m_browser_widget(0),
+      m_cef_proxy(0),
       m_channel(new QWebChannel(this)) {
 
     qDebug() << __FUNCTION__  << this;
@@ -40,11 +40,13 @@ gboolean convert_gtk_event(GtkWidget* w, GdkEvent* e, QWidget* q);
 
 void WebView::initCEF()
 {
-    m_browser_widget = gtk_window_new(GTK_WINDOW_POPUP);
-    gtk_window_resize(GTK_WINDOW(m_browser_widget), size().width(), size().height());
-    g_signal_connect(m_browser_widget, "event-after", (GCallback)convert_gtk_event, this);
-    gtk_widget_show_all(m_browser_widget);
+    auto w = gtk_window_new(GTK_WINDOW_POPUP);
+    gtk_window_resize(GTK_WINDOW(w), size().width(), size().height());
+    g_signal_connect(w, "event-after", (GCallback)convert_gtk_event, this);
+    gtk_widget_show_all(w);
+    m_cef_proxy = QWindow::fromWinId(GDK_WINDOW_XID(gtk_widget_get_window(w)));
     this->CreateBrowser();
+    QWindow::fromWinId(m_cef_proxy->winId())->setParent(this->windowHandle());
 }
 
 WebView::~WebView() {
@@ -97,7 +99,7 @@ void WebView::registerObject(const QString& name, QObject* obj) {
 
 void WebView::syncCEFSize(int xid)
 {
-    if (m_browser_widget) {
+    if (m_cef_proxy) {
         QSize size = this->size();
         XWindowChanges changes;
         changes.x = 0;
@@ -112,10 +114,10 @@ void WebView::syncCEFSize(int xid)
 
 void WebView::resizeEvent(QResizeEvent* event) {
     QWidget::resizeEvent(event);
-    if (m_browser_widget) {
+    if (m_cef_proxy) {
         auto x = m_browser->GetHost()->GetWindowHandle();
         this->syncCEFSize(x);
-        this->syncCEFSize(GDK_WINDOW_XID(gtk_widget_get_window(m_browser_widget)));
+        this->syncCEFSize(m_cef_proxy->winId());
     }
 }
 
@@ -133,8 +135,7 @@ bool WebView::CreateBrowser() {
     CefRect rect(0, 0, this->size().width(), this->size().height());
 
     CefWindowInfo info;
-    // By default, as a child window.
-    info.SetAsChild(GDK_WINDOW_XID(gtk_widget_get_window(m_browser_widget)), rect);
+    info.SetAsChild(m_cef_proxy->winId(), rect);
 
 
     QString url = url_.isEmpty() ? kUrlBlank : url_.toString();
@@ -146,10 +147,6 @@ bool WebView::CreateBrowser() {
                                                   NULL);
 
     WebView::__cache__[m_browser->GetIdentifier()] = this;
-
-    XID xid = GDK_WINDOW_XID(gtk_widget_get_window(m_browser_widget));
-    QWindow::fromWinId(xid)->setParent(this->windowHandle());
-
 
     mutex_.unlock();
     return true;
