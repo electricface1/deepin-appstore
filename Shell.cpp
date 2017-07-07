@@ -13,6 +13,8 @@
 #include <QSettings>
 #include <QProcess>
 
+#include <DWindowManagerHelper>
+
 #include "Shell.h"
 #include "DBusInterface.h"
 #include "ToolTip.h"
@@ -21,7 +23,7 @@
 #include "cef_init.h"
 #include "configure.h"
 
-Shell::Shell(int& argc, char** argv) : QApplication(argc, argv) {
+Shell::Shell(int& argc, char** argv) : Dtk::Widget::DApplication(argc, argv) {
     this->parseOptions();
     this->basePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     this->settings = new QSettings(this);
@@ -75,7 +77,7 @@ void Shell::showTooltip(const QString& text, const QRect& globalGeometry) {
     if (text.isEmpty()) {
         return;
     }
-    this->tooltip = new ToolTip();
+    this->tooltip = new ToolTip(Dtk::Widget::DWindowManagerHelper::instance()->hasComposite());
     connect(this->tooltip, &ToolTip::destroyed, [this]() {
         this->tooltip = nullptr;
     });

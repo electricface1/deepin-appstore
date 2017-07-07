@@ -13,6 +13,8 @@
 #include <QHBoxLayout>
 #include <QPainter>
 #include "StupidWindow.h"
+#include <DWindowManagerHelper>
+
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -93,9 +95,17 @@ auto cornerEdge2XCursor(const CornerEdge& ce) -> int {
 
 StupidWindow::StupidWindow(QWidget* parent) : QWidget(parent),
                                               resizeHandleWidth(5),
-                                              shadowRadius(24),
-                                              layoutMargin(25),
                                               borderRadius(4) {
+    // handle existence of composite manager
+    this->compositeEnabled(Dtk::Widget::DWindowManagerHelper::instance()->hasComposite());
+
+    connect(Dtk::Widget::DWindowManagerHelper::instance(), &Dtk::Widget::DWindowManagerHelper::hasCompositeChanged,
+            [this]() {
+                this->compositeEnabled(Dtk::Widget::DWindowManagerHelper::instance()->hasComposite());
+                this->repaint();
+            });
+
+
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     this->setWindowFlags(Qt::FramelessWindowHint);
 
@@ -106,8 +116,26 @@ StupidWindow::StupidWindow(QWidget* parent) : QWidget(parent),
     this->setLayout(this->horizontalLayout);
 }
 
-StupidWindow::~StupidWindow() {
 
+StupidWindow::~StupidWindow() {
+}
+
+
+
+void StupidWindow::compositeEnabled(bool enable) {
+    if (enable) {
+        shadowRadius = 0;
+        layoutMargin = 2;
+        borderRadius = 4;
+        borderColor = QColor(0, 0, 0, 255/5);
+        borderWidth = 2;
+    } else {
+        shadowRadius = 0;
+        layoutMargin = 2;
+        borderRadius = 0;
+        borderColor = QColor("#bebebe");
+        borderWidth = 20;
+    }
 }
 
 void StupidWindow::polish() {
@@ -548,7 +576,7 @@ void StupidWindow::paintOutline() {
     path.addRoundedRect(rect, this->borderRadius, this->borderRadius);
     QPen pen;
     pen.setColor(this->borderColor);
-    pen.setWidth(2);
+    pen.setWidth(this->borderWidth);
     painter.setPen(pen);
     painter.drawPath(path);
 }

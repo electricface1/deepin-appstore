@@ -60,16 +60,19 @@ protected:
     void changeEvent(QEvent* event) override;
     void paintEvent(QPaintEvent*) override;
     void resizeEvent(QResizeEvent*) override;
+    void compositeEnabled(bool);
 
 private:
     QHBoxLayout* horizontalLayout = nullptr;
     void startResizing(const QPoint& globalPoint, const CornerEdge& ce);
 
-    const int resizeHandleWidth = 0;
-    unsigned const int shadowRadius = 0;
-    const int layoutMargin = 0;
-    const unsigned int borderRadius = 0;
-    const QColor borderColor = QColor(0, 0, 0, 255 / 5);
+    const int resizeHandleWidth = 5;
+
+    unsigned int shadowRadius = 0;
+    int layoutMargin = 0;
+    unsigned int borderRadius = 0;
+    QColor borderColor;
+    unsigned int borderWidth = 0;
 
     int userMinimumWidth = 0;
     int userMinimumHeight = 0;

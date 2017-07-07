@@ -16,6 +16,8 @@
 int main(int argc, char *argv[]) {
     QNetworkProxyFactory::setUseSystemConfiguration(true);
 
+    Dtk::Widget::DApplication::loadDXcbPlugin();
+
     Shell::setApplicationName("DeepinStore");
     Shell::setApplicationDisplayName("Deepin Store");
     Shell::setApplicationVersion(SHELL_VERSION);
