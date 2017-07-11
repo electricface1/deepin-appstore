@@ -59,6 +59,7 @@ set(SOURCE_FILES main.cpp
                  Bridge.cpp Bridge.h
                  FilterMouseMove.cpp FilterMouseMove.h
                  TextBrowser.cpp TextBrowser.h
+                 configure.h configure.cpp
                  AboutWindow.cpp AboutWindow.h
                  DBusInterface.cpp DBusInterface.h)
 

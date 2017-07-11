@@ -17,8 +17,9 @@
 #include "DBusInterface.h"
 #include "ToolTip.h"
 #include "Bridge.h"
-#include "cef_init.h"
 
+#include "cef_init.h"
+#include "configure.h"
 
 Shell::Shell(int& argc, char** argv) : QApplication(argc, argv) {
     this->parseOptions();
@@ -52,13 +53,9 @@ Shell::Shell(int& argc, char** argv) : QApplication(argc, argv) {
     auto initUrl = this->argsParser->value("host");
     if (initUrl.size()) {
         this->initUrl = QUrl(initUrl);
-    } else if (isProfessionalVersion()){
-        this->initUrl = QUrl("http://appstore.deepin.com/");
     } else {
-        this->initUrl = QUrl("http://appstore.deepin.org/");
+        this->initUrl = LoadConfig().host;
     }
-    this->initUrl = QUrl("http://loongson64.appstore.deepin.com");
-
     this->origin = this->initUrl.scheme() + "://" + this->initUrl.host();
 }
 
