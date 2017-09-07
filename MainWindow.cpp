@@ -135,6 +135,8 @@ void MainWindow::changeEvent(QEvent *event) {
 
 void MainWindow::setUrl(const QUrl &url) {
     this->webView->setUrl(url);
+    this->webView->resize(400, 400);
+    this->webView->resize(size());
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {

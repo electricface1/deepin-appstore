@@ -110,8 +110,8 @@ void Bridge::startMoving() {
 
 
 MainWindow* Bridge::getMainWindow() {
-    WebPage* webPage = static_cast<WebPage*>(this->parent());
-    WebView* webView = static_cast<WebView*>(webPage->parent());
+//    WebPage* webPage = static_cast<WebPage*>(this->parent());
+    WebView* webView = static_cast<WebView*>(this->parent());
     MainWindow* mainWindow = static_cast<MainWindow*>(webView->window());
     return mainWindow;
 }

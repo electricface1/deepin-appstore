@@ -30,13 +30,13 @@ AboutWindow::AboutWindow(QWidget *parent) : QWidget(parent),
     this->content->setStyleSheet("QWebView { border: 0 }");
 
     // handle anchors
-    this->content->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    connect(this->content, &QWebView::linkClicked, [](const QUrl& url) {
-        if (url.url().startsWith("http://") ||
-            url.url().startsWith("https://")) {
-            QDesktopServices::openUrl(url);
-        }
-    });
+//    this->content->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+//    connect(this->content, &QWebView::linkClicked, [](const QUrl& url) {
+//        if (url.url().startsWith("http://") ||
+//            url.url().startsWith("https://")) {
+//            QDesktopServices::openUrl(url);
+//        }
+//    });
 
     // smaller shadow
     auto horizontalLayout = new QHBoxLayout(this);
@@ -66,7 +66,9 @@ AboutWindow::AboutWindow(QWidget *parent) : QWidget(parent),
 }
 
 void AboutWindow::setContent(const QString& html) {
-    this->content->setHtml(html);
+    Q_UNUSED(html);
+  qDebug() << "About window:" << html;
+//    this->content->setHtml(html);
 }
 
 AboutWindow::~AboutWindow() {

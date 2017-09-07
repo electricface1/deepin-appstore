@@ -8,11 +8,16 @@
  **/
 #include <QDebug>
 #include <QNetworkProxyFactory>
+#include <qcef_context.h>
 
 #include "Shell.h"
 
 int main(int argc, char *argv[]) {
     QNetworkProxyFactory::setUseSystemConfiguration(true);
+
+    QCefGlobalSettings settings;
+    settings.setRemoteDebug(true);
+    QCefInit(argc, argv, settings);
 
     // The matching client version code in frontend(jssrc/services/AboutContentService.js)
     // should be sync with the ApplicationName here.
@@ -25,6 +30,6 @@ int main(int argc, char *argv[]) {
     Shell::loadDXcbPlugin();
 
     Shell shell(argc, argv);
-    int result = shell.exec();
-    return result;
+    QCefRunLoop();
+    return 0;
 }

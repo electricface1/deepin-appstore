@@ -12,7 +12,7 @@
 #include <QCommandLineParser>
 #include <QSettings>
 #include <QProcess>
-
+#include <qcef_context.h>
 #include <DWindowManagerHelper>
 
 #include "Shell.h"
@@ -71,6 +71,7 @@ Shell::~Shell() {
         delete this->dbusInterface;
         this->dbusInterface = nullptr;
     }
+    QCefQuitLoop();
 }
 
 void Shell::showTooltip(const QString& text, const QRect& globalGeometry) {
@@ -122,8 +123,8 @@ void Shell::parseOptions() {
 void Shell::startWebView() {
     this->win = new MainWindow();
 
-    this->win->setUrl(this->initUrl);
-    this->win->show();
+  this->win->show();
+  this->win->setUrl(this->initUrl);
 }
 
 void Shell::openManual() {
