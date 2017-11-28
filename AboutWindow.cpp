@@ -8,54 +8,47 @@
  **/
 #include <QDebug>
 #include <QDesktopServices>
-
 #include <DPlatformWindowHandle>
 #include <QLayout>
 #include <QPushButton>
 #include <QKeyEvent>
+#include <qcef_web_page.h>
+#include <qcef_web_settings.h>
+
 #include "AboutWindow.h"
 #include "WebWidget.h"
 
-AboutWindow::AboutWindow(QWidget *parent) : QWidget(parent),
+AboutWindow::AboutWindow(QWidget *parent) : QFrame(parent),
                                             contentWidth(380), contentHeight(390) {
     this->setWindowModality(Qt::WindowModality::ApplicationModal);
     this->setAutoFillBackground(true);
     this->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setFixedSize(this->contentWidth, this->contentHeight);
-    this->setStyleSheet("AboutWindow { background: transparent }");
+//    this->setStyleSheet("AboutWindow { background: transparent }");
 
-    this->content = new WebView(this);
+    this->content = new WebView();
+    this->content->page()->settings()->setWebSecurity(QCefWebSettings::StateDisabled);
     this->content->setFixedSize(this->contentWidth, this->contentHeight);
-    this->content->setStyleSheet("QWebView { border: 0 }");
 
-    // handle anchors
-//    this->content->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-//    connect(this->content, &QWebView::linkClicked, [](const QUrl& url) {
-//        if (url.url().startsWith("http://") ||
-//            url.url().startsWith("https://")) {
-//            QDesktopServices::openUrl(url);
-//        }
-//    });
-
-    // smaller shadow
-    auto horizontalLayout = new QHBoxLayout(this);
-    horizontalLayout->setSpacing(0);
-    horizontalLayout->setMargin(0);
-    horizontalLayout->setObjectName("horizontalLayout");
-    this->setLayout(horizontalLayout);
-    this->layout()->addWidget(this->content);
-
-    const auto closeBtn = new QPushButton(this->content);
+    const auto closeBtn = new QPushButton(this);
     closeBtn->setCheckable(true);
     closeBtn->setFixedSize(25, 24);
-    closeBtn->move(this->contentWidth - closeBtn->width(), 0);
     closeBtn->setStyleSheet(
-        "QPushButton { border: 0; background: url(':/res/close_small_normal.png'); }"
+        "QPushButton { border: 0; outline: none; background: url(':/res/close_small_normal.png'); }"
         "QPushButton:hover { background: url(':/res/close_small_hover.png'); }"
         "QPushButton:pressed { background: url(':/res/close_small_press.png'); }"
     );
     closeBtn->setFlat(true);
+
+    // smaller shadow
+    auto layout = new QVBoxLayout(this);
+    layout->setSpacing(0);
+    layout->setMargin(0);
+    layout->setObjectName("horizontalLayout");
+    this->setLayout(layout);
+    layout->addWidget(closeBtn, 0, Qt::AlignRight);
+    layout->addWidget(this->content);
 
     connect(closeBtn, &QPushButton::clicked, [this]() {
         this->close();
@@ -66,9 +59,10 @@ AboutWindow::AboutWindow(QWidget *parent) : QWidget(parent),
 }
 
 void AboutWindow::setContent(const QString& html) {
-    Q_UNUSED(html);
-  qDebug() << "About window:" << html;
-//    this->content->setHtml(html);
+    qDebug() << "About window:" << html;
+    QString m = html;
+    m = m.replace(":/", "qrc:/");
+    this->content->page()->setHtml(m, QUrl("https://deepin.org"));
 }
 
 AboutWindow::~AboutWindow() {

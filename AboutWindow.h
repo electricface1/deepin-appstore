@@ -9,11 +9,11 @@
 
 #ifndef SHELL_ABOUTWINDOW_H
 #define SHELL_ABOUTWINDOW_H
-#include <QWidget>
+#include <QFrame>
 class WebView;
 class QGraphicsDropShadowEffect;
 
-class AboutWindow : public QWidget {
+class AboutWindow : public QFrame {
     Q_OBJECT
 
 public:

@@ -7,6 +7,7 @@
  * (at your option) any later version.
  **/
 #include <QDebug>
+#include <QDir>
 #include <QNetworkProxyFactory>
 #include <qcef_context.h>
 
@@ -17,6 +18,12 @@ int main(int argc, char *argv[]) {
 
     QCefGlobalSettings settings;
     settings.setRemoteDebug(true);
+    QDir cache_dir(QDir::home().filePath(".cache/deepin/deepin-appstore"));
+    cache_dir.mkpath(".");
+    settings.setCachePath(cache_dir.filePath("cache"));
+    settings.setUserDataPath(cache_dir.filePath("data"));
+    settings.setLogFile(cache_dir.filePath("web-console.log"));
+
     QCefInit(argc, argv, settings);
 
     // The matching client version code in frontend(jssrc/services/AboutContentService.js)
