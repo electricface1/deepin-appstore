@@ -42,6 +42,7 @@ public:
 
     void updateCursor(CornerEdge);
 
+    void startMoving();
 
 Q_SIGNALS:
     void windowStateChanged(Qt::WindowState state);

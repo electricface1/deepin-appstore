@@ -49,7 +49,9 @@ set(SOURCE_FILES main.cpp
     configure.h configure.cpp
     AboutWindow.cpp AboutWindow.h
     lastore-daemon.h
-    DBusInterface.cpp DBusInterface.h)
+    DBusInterface.cpp DBusInterface.h
+    xutil.cpp xutil.h
+    )
 
 set(TOOLTIP_FILES ToolTip.cpp)
 set(DBUSMENU_FILES dbusmenu.cpp dbusmenu.h dbusmenumanager.cpp dbusmenumanager.h)

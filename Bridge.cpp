@@ -27,6 +27,8 @@
 #include <QFont>
 #include <QFontMetrics>
 #include <QLabel>
+#include <QDebug>
+#include <QMouseEvent>
 
 #include <QLayout>
 
@@ -41,6 +43,7 @@
 #include "dbusmenumanager.h"
 
 #include "configure.h"
+#include "xutil.h"
 
 auto nameWindowState(Qt::WindowStates state) -> QString {
     if (state & Qt::WindowMaximized) {
@@ -101,16 +104,11 @@ void Bridge::showTooltip(const QString& text,
 
 
 void Bridge::startMoving() {
-    QMouseEvent ev( (QEvent::MouseMove), QPoint(0, 0),
-                     Qt::NoButton,
-                     Qt::NoButton,
-                     Qt::NoModifier   );
-    QApplication::sendEvent(this->getMainWindow(), &ev);
+    getMainWindow()->startMoving();
 }
 
 
 MainWindow* Bridge::getMainWindow() {
-//    WebPage* webPage = static_cast<WebPage*>(this->parent());
     WebView* webView = static_cast<WebView*>(this->parent());
     MainWindow* mainWindow = static_cast<MainWindow*>(webView->window());
     return mainWindow;

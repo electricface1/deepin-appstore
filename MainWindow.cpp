@@ -21,6 +21,7 @@
 #include "Shell.h"
 #include "MainWindow.h"
 #include "FilterMouseMove.h"
+#include "xutil.h"
 
 
 #include <X11/Xlib.h>
@@ -113,6 +114,12 @@ void MainWindow::updateCursor(CornerEdge ce) {
     XFlush(display);
 }
 
+void MainWindow::startMoving() {
+  this->webView->hide();
+  this->webView->show();
+  netease::utils::MoveWindow(this);
+}
+
 void MainWindow::setBorderRadius(int s) {
     DPlatformWindowHandle handler(this);
     handler.setWindowRadius(s);
@@ -152,12 +159,19 @@ MainWindow::~MainWindow() {
 }
 
 bool MainWindow::event(QEvent* event) {
-    if (event->type() == QEvent::WindowDeactivate) {
+    switch (event->type()) {
+      case QEvent::WindowDeactivate: {
         // Try hard to kill tooltips
         // https://bugzilla.deepin.io/show_bug.cgi?id=4351
         const auto shell = static_cast<Shell*>(qApp);
         shell->showTooltip("", QRect());
+        break;
+      }
+      default: {
+
+      }
     }
+
     return QWidget::event(event);
 }
 
