@@ -71,7 +71,6 @@ Shell::~Shell() {
         delete this->dbusInterface;
         this->dbusInterface = nullptr;
     }
-    QCefQuitLoop();
 }
 
 void Shell::showTooltip(const QString& text, const QRect& globalGeometry) {

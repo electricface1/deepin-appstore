@@ -30,6 +30,6 @@ int main(int argc, char *argv[]) {
     Shell::loadDXcbPlugin();
 
     Shell shell(argc, argv);
-    QCefRunLoop();
-    return 0;
+    QCefBindApp(&shell);
+    return shell.exec();
 }
