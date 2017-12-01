@@ -57,7 +57,14 @@ Shell::Shell(int& argc, char** argv) : QApplication(argc, argv) {
     } else {
         this->initUrl = QUrl("http://appstore.deepin.org/");
     }
-    this->initUrl = QUrl("http://loongson64.appstore.deepin.com");
+
+    char* lang = 0;
+    if ((lang = getenv("LANGUAGE"))  || (lang = getenv("LC_ALL")) || (lang = getenv("LANG"))) {
+      this->initUrl = QUrl(QString("http://loongson64.appstore.deepin.com?lang=") + lang);
+    } else {
+      this->initUrl = QUrl("http://loongson64.appstore.deepin.com");
+    }
+
 
     this->origin = this->initUrl.scheme() + "://" + this->initUrl.host();
 }

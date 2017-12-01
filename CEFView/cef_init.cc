@@ -53,6 +53,7 @@ CefSettings BuildCefSettings() {
     char* s = 0;
     if ((s = getenv("LANGUAGE"))  || (s = getenv("LC_ALL")) || (s = getenv("LANG"))) {
         CefString(&settings.locale) = CefString(s);
+        CefString(&settings.accept_language_list) = CefString(s);
     }
 
     auto ua = QApplication::instance()->applicationName() + "/" + QApplication::instance()->applicationVersion();
