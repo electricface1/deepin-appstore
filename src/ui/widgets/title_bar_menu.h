@@ -38,7 +38,7 @@ class TitleBarMenu : public QMenu {
   void clearCacheRequested();
 
  public slots:
-  void setUserInfo(const QJsonObject& info);
+  void setUserInfo(const QVariantMap &info);
   void setRegion(bool is_china);
   void setThemeName(QString themeName);
 

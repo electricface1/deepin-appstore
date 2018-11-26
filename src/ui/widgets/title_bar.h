@@ -53,7 +53,7 @@ signals:
 public slots:
     void setBackwardButtonActive(bool active);
     void setForwardButtonActive(bool active);
-    void setUserInfo(const QJsonObject& info);
+    void setUserInfo(const QVariantMap &info);
 
 private:
     void initUI();

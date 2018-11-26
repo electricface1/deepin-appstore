@@ -55,7 +55,7 @@ void TitleBar::setForwardButtonActive(bool active)
     forward_button_->setEnabled(active);
 }
 
-void TitleBar::setUserInfo(const QJsonObject &info)
+void TitleBar::setUserInfo(const QVariantMap &info)
 {
     if (info.value("name").toString().isEmpty()) {
         setUserAvatar(QImage(":/common/images/default.jpeg"));

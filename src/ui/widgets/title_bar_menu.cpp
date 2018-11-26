@@ -34,7 +34,7 @@ TitleBarMenu::~TitleBarMenu() {
 
 }
 
-void TitleBarMenu::setUserInfo(const QJsonObject& info) {
+void TitleBarMenu::setUserInfo(const QVariantMap& info) {
   Q_ASSERT(support_sign_in_);
   auto username = info.value("name").toString();
   is_signed_in_ = !username.isEmpty();

@@ -19,7 +19,7 @@
 #define DEEPIN_APPSTORE_UI_CHANNEL_MENU_PROXY_H
 
 #include <QObject>
-#include <QVariant>
+#include <QVariantMap>
 
 namespace dstore
 {
@@ -55,14 +55,14 @@ signals:
      * @brief notify user info change when user login/logout from web page
      * @param info
      */
-    void userInfoUpdated(QJsonObject info);
+    void userInfoUpdated(QVariantMap info);
 
 public slots:
     /**
      * @brief update titlebar info
      * @param info
      */
-    void setUserInfo(QVariant info);
+    void setUserInfo(QVariantMap info);
 };
 
 }  // namespace dstore
